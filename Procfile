@@ -1,2 +1,1 @@
-worker1: python3 probot.py
-worker2: python3 projectUpdate.py
+worker1: python3 bilbot.py
