@@ -27,7 +27,7 @@ async def listguilds(ctx):
 
     conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
     cur = conn.cursor()
-    cur.execute("select * from home_guilds order by priority desc")
+    cur.execute("select * from home_guilds order by priority asc")
     guilds = cur.fetchall()
     cur.close()
     conn.close()
@@ -37,13 +37,19 @@ async def listguilds(ctx):
     for guild in guilds:
         tiers[guild[1]-1].append(guild)
 
+    responded = False
+
     for tier in range(1,6):
         message = ""
         if tiers[tier-1] != []:
             for guild in tiers[tier-1]:
-                message += "**{0}**\nRecruit Priority: {1}\nCherries: {2}\nNew Guild Status: {3}\n\n".format(guild[0], str(guild[2]), str(guild[3]), str(guild[4]))
+                message += "**{0}**\nRecruit Priority: {1}\nCherries: {2}\nNew Guild Status: {3}\n\n".format(guild[0], str(guild[3]), str(guild[2]), str(guild[4]))
             embed = discord.Embed(title = "Tier {} Guilds".format(str(tier)), description = message)
-            await ctx.send(embed = embed)
+            if not responded:
+                await ctx.respond(embed = embed)
+                responded = True
+            else:
+                await ctx.send(embed = embed)
 
     return
 
