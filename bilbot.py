@@ -42,7 +42,7 @@ async def listguilds(ctx):
         if tiers[tier-1] != []:
             for guild in tiers[tier-1]:
                 message += "**{0}**\nRecruit Priority: {1}\nCherries: {2}\nNew Guild Status: {3}\n\n".format(guild[0], str(guild[2]), str(guild[3]), str(guild[4]))
-            embed = discord.embed(title = "Tier {} Guilds".format(str(tier)), description = message)
+            embed = discord.Embed(title = "Tier {} Guilds".format(str(tier)), description = message)
             await ctx.send(embed = embed)
 
     return
