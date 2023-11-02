@@ -78,7 +78,7 @@ async def updatetier(ctx, guildname: discord.Option(str, autocomplete = discord.
 
     conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
     cur = conn.cursor()
-    cur.execute("update home_guilds set guild_tier = {0} where guild_name = {1}".format(newtier, guildname))
+    cur.execute("update home_guilds set guild_tier = {0} where guild_name = '{1}'".format(newtier, guildname))
     conn.commit()
     cur.close()
     conn.close()
