@@ -12,6 +12,7 @@ DATABASE_TOKEN = os.getenv('DATABASE_TOKEN')
 BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 
 COUNCIL_GUILD_ID = 1107434690882842645
+RECRUITING_CHANNEL_ID = 1110679408911593664
 GUILDS = []
 
 conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
@@ -69,6 +70,15 @@ async def listguilds(ctx):
 @bot.slash_command(guild_ids=[COUNCIL_GUILD_ID], description="Begin the recruitment process")
 async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), collectionpower: Option(str, "What is the recruit's collection power?")):
     await ctx.response.defer()
+
+    guild = discord.utils.get(bot.guilds, id=COUNCIL_GUILD_ID)
+    channel = guild.get_channel(RECRUITING_CHANNEL_ID)
+    thread = await channel.create_thread(name="Testing", message=None, auto_archive_duration=None, type=discord.ChannelType.public_thread, reason=None)
+
+    await thread.send("Sending a test message in a thread")
+
+    ctx.respond("<#{}> has been created".format(str(thread.id)), ephemeral = True)
+
     return
 
 #Slash command to update a guild's tier
@@ -96,6 +106,10 @@ async def updatetier(ctx, guildname: discord.Option(str, autocomplete = discord.
 
 #TODO Slash command to manually update guild's cherries
 
+#TODO Slash command to update guild's newbie status
+
 #TODO Slash command to update tier min/max collection power
+
+#TODO Slash command to add a new guild
 
 bot.run(BOT_TOKEN)
