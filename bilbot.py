@@ -13,6 +13,12 @@ BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 
 COUNCIL_GUILD_ID = 1107434690882842645
 RECRUITING_CHANNEL_ID = 1110679408911593664
+TIER_1_RECRUITER_ROLE_ID = 69
+TIER_2_RECRUITER_ROLE_ID = 1158768328278560768
+TIER_3_RECRUITER_ROLE_ID = 1158768416438636655
+TIER_4_RECRUITER_ROLE_ID = 1158768484071780352
+TIER_5_RECRUITER_ROLE_ID = 69
+TIER_RECRUITER_IDS = [0,TIER_1_RECRUITER_ROLE_ID, TIER_2_RECRUITER_ROLE_ID, TIER_3_RECRUITER_ROLE_ID, TIER_4_RECRUITER_ROLE_ID, TIER_5_RECRUITER_ROLE_ID]
 GUILDS = []
 
 conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
@@ -84,7 +90,7 @@ async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), co
     cur.close()
     conn.close()
 
-    await thread.send("{0} should be placed in a Tier {1} guild. These have been listed below with their priority ranks.".format(newbiename, str(tier)))
+    await thread.send("{0} should be placed in a Tier {1} guild. These have been listed below with their priority ranks. <@&{2}>".format(newbiename, str(tier), str(TIER_RECRUITER_IDS[tier])))
 
     message = ""
     for guild in guilds:
