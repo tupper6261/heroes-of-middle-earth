@@ -73,7 +73,7 @@ async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), co
 
     guild = discord.utils.get(bot.guilds, id=COUNCIL_GUILD_ID)
     channel = guild.get_channel(RECRUITING_CHANNEL_ID)
-    thread = await channel.create_thread(name="{0} - {1}}".format(newbiename, str(collectionpower)), message=None, auto_archive_duration=None, type=discord.ChannelType.public_thread, reason=None)
+    thread = await channel.create_thread(name="{0} - {1}".format(newbiename, str(collectionpower)), message=None, auto_archive_duration=None, type=discord.ChannelType.public_thread, reason=None)
 
     conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
     cur = conn.cursor()
