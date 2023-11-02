@@ -73,9 +73,25 @@ async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), co
 
     guild = discord.utils.get(bot.guilds, id=COUNCIL_GUILD_ID)
     channel = guild.get_channel(RECRUITING_CHANNEL_ID)
-    thread = await channel.create_thread(name="Testing", message=None, auto_archive_duration=None, type=discord.ChannelType.public_thread, reason=None)
+    thread = await channel.create_thread(name="{0} - {1}}".format(newbiename, str(collectionpower)), message=None, auto_archive_duration=None, type=discord.ChannelType.public_thread, reason=None)
 
-    await thread.send("Sending a test message in a thread")
+    conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
+    cur = conn.cursor()
+    cur.execute("select id from home_tiers where cp_min < {0} and cp_max > {1}".format(collectionpower, collectionpower))
+    tier = cur.fetchall()[0]
+    cur.execute("select * from home_guilds where guild_tier = {0} order by priority asc".format(tier))
+    guilds = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    await thread.send("{0} should be placed in a Tier {1} guild. These have been listed below with their priority ranks.}")
+
+    message = ""
+    for guild in guilds:
+        message += "**{0}**\nRecruit Priority: {1}\nCherries: {2}\nNew Guild Status: {3}\n\n".format(guild[0], str(guild[3]), str(guild[2]), str(guild[4]))
+    embed = discord.Embed(title = "Tier {} Guilds".format(str(tier)), description = message)
+    await thread.send(embed = embed)
 
     await ctx.respond("<#{}> has been created".format(str(thread.id)), ephemeral = True)
 
