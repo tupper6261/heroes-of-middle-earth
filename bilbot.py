@@ -85,7 +85,7 @@ async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), co
     cur.close()
     conn.close()
 
-    await thread.send("{0} should be placed in a Tier {1} guild. These have been listed below with their priority ranks.}")
+    await thread.send("{0} should be placed in a Tier {1} guild. These have been listed below with their priority ranks.".format(newbiename, str(tier)))
 
     message = ""
     for guild in guilds:
