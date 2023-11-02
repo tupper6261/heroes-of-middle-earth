@@ -77,7 +77,7 @@ async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), co
 
     await thread.send("Sending a test message in a thread")
 
-    ctx.respond("<#{}> has been created".format(str(thread.id)), ephemeral = True)
+    await ctx.respond("<#{}> has been created".format(str(thread.id)), ephemeral = True)
 
     return
 
