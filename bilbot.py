@@ -119,7 +119,7 @@ async def updatetier(ctx, guildname: discord.Option(str, autocomplete = discord.
 
     return
 
-#TODO Slash command to manually update update guild's priority
+#Slash command to manually update update guild's priority
 @bot.slash_command(guild_ids=[COUNCIL_GUILD_ID], description="Update a guild's priority")
 async def updatepriority(ctx, guildname: discord.Option(str, autocomplete = discord.utils.basic_autocomplete(GUILDS)), newpriority: Option(int, "What priority should this guild be?")):
     await ctx.response.defer()
@@ -136,13 +136,50 @@ async def updatepriority(ctx, guildname: discord.Option(str, autocomplete = disc
 
     return
 
+#Slash command to manually update guild's cherries
+@bot.slash_command(guild_ids=[COUNCIL_GUILD_ID], description="Update a guild's cherry count")
+async def updatecherries(ctx, guildname: discord.Option(str, autocomplete = discord.utils.basic_autocomplete(GUILDS)), newcherrycount: Option(int, "How many cherries should this guild have?")):
+    await ctx.response.defer()
+
+    conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
+    cur = conn.cursor()
+    cur.execute("update home_guilds set cherries = {0} where guild_name = '{1}'".format(newcherrycount, guildname))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    if newcherrycount == 1:
+        embed = discord.Embed(title = "{} Updated".format(guildname), description = "{0} now has {1} cherry.".format(guildname, str(newcherrycount)))
+    else:
+        embed = discord.Embed(title = "{} Updated".format(guildname), description = "{0} now has {1} cherries.".format(guildname, str(newcherrycount)))
+    await ctx.respond(embed = embed)
+
+    return
+
+#Slash command to manually update guild's new status
+@bot.slash_command(guild_ids=[COUNCIL_GUILD_ID], description="Update a guild's new status")
+async def updatenewstatus(ctx, guildname: discord.Option(str, autocomplete = discord.utils.basic_autocomplete(GUILDS)), newstatus: Option(bool, "Should this guild have new status?")):
+    await ctx.response.defer()
+
+    conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
+    cur = conn.cursor()
+    cur.execute("update home_guilds set new_status = {0} where guild_name = '{1}'".format(newstatus, guildname))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    if newstatus:
+        embed = discord.Embed(title = "{} Updated".format(guildname), description = "{0} is now considered a new guild.".format(guildname, str(newstatus)))
+    else:
+        embed = discord.Embed(title = "{} Updated".format(guildname), description = "{0} is now not considered a new guild.".format(guildname, str(newstatus)))
+
+    await ctx.respond(embed = embed)
+
+    return
+
 #TODO Slash command to tell bot that a guild accepted a recruit
 
 #TODO Slash command to tell bot that a guild passed on a recruit
-
-#TODO Slash command to manually update guild's cherries
-
-#TODO Slash command to manually update guild's newbie status
 
 #TODO Slash command to update tier min/max collection power
 
