@@ -12,6 +12,17 @@ DATABASE_TOKEN = os.getenv('DATABASE_TOKEN')
 BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 
 COUNCIL_GUILD_ID = 1107434690882842645
+GUILDS = []
+
+conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
+cur = conn.cursor()
+cur.execute("SELECT guild_name FROM home_guilds")
+results = cur.fetchall()
+cur.close()
+conn.close()
+
+for i in results:
+    GUILDS.append(i)
 
 # Set up the bot with the proper intents to read message content and reactions
 intents = discord.Intents.default()
@@ -20,7 +31,7 @@ intents.reactions = True
 intents.members = True
 bot = commands.Bot(command_prefix="+", intents=intents)
 
-#Slash command to display an invocation from a specified project
+#Slash command to display the current status of guilds
 @bot.slash_command(guild_ids=[COUNCIL_GUILD_ID], description="Display the current Council guilds")
 async def listguilds(ctx):
     await ctx.response.defer()
@@ -50,6 +61,29 @@ async def listguilds(ctx):
                 responded = True
             else:
                 await ctx.send(embed = embed)
+
+    return
+
+#Slash command to begin the recruitment process
+@bot.slash_command(guild_ids=[COUNCIL_GUILD_ID], description="Begin the recruitment process")
+async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), collectionpower: Option(str, "What is the recruit's collection power?")):
+    await ctx.response.defer()
+    return
+
+#Slash command to update a guild's tier
+@bot.slash_command(guild_ids=[COUNCIL_GUILD_ID], description="Update a guild's tier")
+async def updatetier(ctx, guildname: discord.Option(str, autocomplete = discord.utils.basic_autocomplete(GUILDS)), newtier: Option(int, "What tier should this guild be?")):
+    await ctx.response.defer()
+
+    conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
+    cur = conn.cursor()
+    cur.execute("update home_guilds set guild_tier = ")
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    embed = discord.Embed(title = "{} Updated".format(guildname), description = "{0} is now a Tier {1} guild".format(guildname, str(newtier)))
+    await ctx.respond(embed = embed)
 
     return
 
