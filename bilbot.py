@@ -22,7 +22,7 @@ cur.close()
 conn.close()
 
 for i in results:
-    GUILDS.append(i)
+    GUILDS.append(i[0])
 
 # Set up the bot with the proper intents to read message content and reactions
 intents = discord.Intents.default()
@@ -64,6 +64,7 @@ async def listguilds(ctx):
 
     return
 
+#TODO
 #Slash command to begin the recruitment process
 @bot.slash_command(guild_ids=[COUNCIL_GUILD_ID], description="Begin the recruitment process")
 async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), collectionpower: Option(str, "What is the recruit's collection power?")):
@@ -86,5 +87,15 @@ async def updatetier(ctx, guildname: discord.Option(str, autocomplete = discord.
     await ctx.respond(embed = embed)
 
     return
+
+#TODO Slash command to tell bot that a guild accepted a recruit
+
+#TODO Slash command to tell bot that a guild passed on a recruit
+
+#TODO Slash command to manually update update guild's priority
+
+#TODO Slash command to manually update guild's cherries
+
+#TODO Slash command to update tier min/max collection power
 
 bot.run(BOT_TOKEN)
