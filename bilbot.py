@@ -78,7 +78,7 @@ async def newbie(ctx, newbiename: Option(str, "What is the recruit's name?"), co
     conn = psycopg2.connect(DATABASE_TOKEN, sslmode='require')
     cur = conn.cursor()
     cur.execute("select id from home_tiers where cp_min < {0} and cp_max > {1}".format(collectionpower, collectionpower))
-    tier = cur.fetchall()[0]
+    tier = cur.fetchall()[0][0]
     cur.execute("select * from home_guilds where guild_tier = {0} order by priority asc".format(tier))
     guilds = cur.fetchall()
 
